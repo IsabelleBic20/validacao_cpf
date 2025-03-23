@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        string cpf = "123.456.789-09";
+        string[] partes = cpf.Split('.', '-');
+        string cpfSemPontuacao = string.Join("", partes);
+
+        // Convertendo string para int 
+        List<int> cpfNumeros = cpfSemPontuacao.Select(c => int.Parse(c.ToString())).ToList();
+
+        if (cpfNumeros.Count != 11)
+        {
+            Console.WriteLine("CPF inválido!");
+            return;
+        }
+
+        // Cálculo do primeiro dígito verificador
+        int[] multiplicador1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int soma1 = 0;
+
+        for (int i = 0; i < 9; i++)
+        {
+            soma1 += cpfNumeros[i] * multiplicador1[i];
+        }
+
+        int resto1 = soma1 % 11;
+        int primeiroDigitoCalculado = (resto1 < 2) ? 0 : (11 - resto1);
+
+        // Cálculo do segundo dígito verificador
+        int[] multiplicador2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int soma2 = 0;
+
+        for (int i = 0; i < 10; i++)
+        {
+            soma2 += cpfNumeros[i] * multiplicador2[i];
+        }
+
+        int resto2 = soma2 % 11;
+        int segundoDigitoCalculado = (resto2 < 2) ? 0 : (11 - resto2);
+
+        // Verificação final
+        if (primeiroDigitoCalculado == cpfNumeros[9] && segundoDigitoCalculado == cpfNumeros[10])
+        {
+            Console.WriteLine("CPF válido!");
+        }
+        else
+        {
+            Console.WriteLine("CPF inválido!");
+        }
+    }
+}
